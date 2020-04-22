@@ -1,0 +1,28 @@
+#coordinates for tap
+#format: name, x, y
+shoot,100,525
+jump,1845,740
+bag,120,975
+gun1,835,970
+gun2,1080,975
+crouch,1643,998
+prone,1762,985
+scope,1863,561
+settings,1595,50
+pickup,1388,273
+pickitem1,1238,388
+pickitem2,1277,497
+lookaround,1515,332
+run,1597,280
+fpp,506,907
+drive,1328,468
+getin,1322,577
+opendoor,1344,575
+openbox,1313,273
+openmap,1795,146
+revive,988,651
+meds,595,1025
+grenade,1315,1015
+jumpover,1848,862
+pistol,1191,904
+lookstart,1470,622
