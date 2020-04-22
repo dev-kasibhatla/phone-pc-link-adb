@@ -1,0 +1,5 @@
+#format: name, x1, y1, x2, y2
+move up,298,803,290,691
+move left,298,803,180,808
+move right,298,803,424,799
+move down,298,803,295,936
