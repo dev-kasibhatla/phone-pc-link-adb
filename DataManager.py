@@ -42,15 +42,15 @@ class DM:
 class Tap:
     def __init__(self, name,x,y):
         self.name = name
-        self.x = x
-        self.y = y
+        self.x = int(x)
+        self.y = int(y)
         #print(name+' '+x+' '+y)
 
 class Swipe:
     def __init__(self, name,x1,y1,x2,y2):
         self.name = name
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-        print(name+' '+x1+' '+y1+' '+x2+' '+y2)
+        self.x1 = int(x1)
+        self.y1 = int(y1)
+        self.x2 = int(x2)
+        self.y2 = int(y2)
+        #print(name+' '+x1+' '+y1+' '+x2+' '+y2)
