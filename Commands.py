@@ -18,3 +18,6 @@ def getSwipe(action):
         if swipe.name == action:
             return "swipe "+str(swipe.x1)+' '+str(swipe.y1)+ ' ' + str(swipe.x2)+' '+str(swipe.y2) + ' ' + str(tapDelay*2)
     print("Can't find "+action)
+
+def customSwipe(x1,y1,x2,y2,ms):
+    return str("swipe "+str(x1)+' '+str(y1)+ ' ' + str(x2)+' '+str(y2) + ' ' + str(ms))
