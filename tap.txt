@@ -26,3 +26,6 @@ grenade,1315,1015
 jumpover,1848,862
 pistol,1191,904
 lookstart,1470,622
+reload,1460,1005
+peekleft,262,410
+peekright,408,395
