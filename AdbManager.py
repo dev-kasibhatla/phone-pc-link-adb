@@ -10,10 +10,10 @@ def e(action):
     #print(repr(process.stdout.readline())) # Should print output
 
 def dot(action):
-    e(com.getTap(action))
+    e(com.getTap2(action))
 
 def dos(action):
-    e(com.getSwipe(action))
+    e(com.getSwipe2(action))
 
 
 def closeShell():
