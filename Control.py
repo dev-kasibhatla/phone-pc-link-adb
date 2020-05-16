@@ -1,7 +1,14 @@
 from pynput import mouse
 import Commands as com
 import DataManager as data
-import AdbManager as adb
+import Network as net
+import threading
+import logging
+import keys
+
+logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-9s) %(message)s',)
+
+lockControl = True
 
 button_left = "Button.left"
 button_right = "Button.right"
@@ -10,7 +17,7 @@ button_front = "Button.button9"
 button_back = "Button.button8"
 
 def on_move(x, y):
-    # print('Pointer moved to {0}'.format(
+    # pri('Pointer moved to {0}'.format(
     #     (x, y)))
     processMovement(x,y)
 
@@ -18,11 +25,15 @@ def on_click(x, y, button, pressed):
     # print('{0} at {1}'.format(
     #     'Pressed' if pressed else 'Released',
     #     (x, y)))
-    #print(button)
+    #pri(button)
     if pressed:
         if processClick(str(button)):
             return
     if not pressed:
+        if not keys.keepRunning:
+            net.keepRunning=False
+            pri("Stopping")
+            return False
         # Stop listener
         return True
 
@@ -35,29 +46,37 @@ def on_scroll(x, y, dx, dy):
 look_start = data.Tap("a",0,0) 
 lis=[]
 def init():
+    pri("Starting")
     global lis
     global look_start
     for tap in data.taps:
         if tap.name == "lookstart":
             look_start=tap
-            print("lookstart initialized")
+            pri("lookstart initialized")
     with mouse.Listener(on_move=on_move,on_click=on_click,on_scroll=on_scroll) as listener:
         lis.append(listener)
-        print("appended")
+        pri("appended")
         listener.join()
+    net.keepRunning=False
+    pri("init complete")
 
 
 def processClick(but):
+    global lockControl
     if but == button_left:
-        print("Left click")
+        #pri("Left click")
+        e(com.getTap("shoot"))
     elif but==button_right:
-        print("Right click")
+        #pri("Right click")
+        e(com.getTap("scope"))
     elif but==button_middle:
-        print("Middle click")
+        lockControl= not lockControl
+        keys.lockControl=lockControl
+        #pri("Middle click")
     elif but==button_front:
-        print("Front click")
+        e(com.getTap("gun1"))
     elif but==button_back:
-        print("Back click")
+        e(com.getTap("gun2"))
 
 px=0
 py=0
@@ -79,7 +98,16 @@ def processMovement(x,y):
     if abs(dx)>threshold or abs(dy)>threshold:
         #now move that much
         print("dx",dx,"dy",dy)
-        adb.e(com.customSwipe(look_start.x,look_start.y,look_start.x+dx,look_start.y+dy,look_duration))
+        #e(com.customSwipe(look_start.x,look_start.y,look_start.x+dx,look_start.y+dy))
         dx=0
         dy=0
 
+def pri(m):
+    logging.debug(m)
+
+def e(finalEvent):
+    if len(net.clients)>0 and lockControl:
+        net.commands.insert(0,finalEvent)
+
+t2 = threading.Thread(name="controlthread",target=init)
+t2.start()
