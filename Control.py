@@ -1,10 +1,15 @@
 from pynput import mouse
+from pynput.mouse import Controller
 import Commands as com
 import DataManager as data
 import Network as net
 import threading
 import logging
 import keys
+import time
+
+scale=1.5
+mouseRefresh = 0.001 #50 ms
 
 logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-9s) %(message)s',)
 
@@ -16,10 +21,16 @@ button_middle = "Button.middle"
 button_front = "Button.button9"
 button_back = "Button.button8"
 
+mow = Controller()
+centreX = 1736
+centreY = 375
+currLoc = (centreX,centreY)
+
 def on_move(x, y):
-    # pri('Pointer moved to {0}'.format(
-    #     (x, y)))
-    processMovement(x,y)
+    global currLoc
+    #print('Pointer moved to {0}'.format((x, y)))
+    currLoc = (x,y)
+    #processMovement(x,y)
 
 def on_click(x, y, button, pressed):
     # print('{0} at {1}'.format(
@@ -43,16 +54,18 @@ def on_scroll(x, y, dx, dy):
         (x, y)))
     
 
-look_start = data.Tap("a",0,0) 
+look_start = data.Tap("a",1470,622) 
 lis=[]
 def init():
-    pri("Starting")
+    pri("Starting control")
     global lis
     global look_start
     for tap in data.taps:
         if tap.name == "lookstart":
             look_start=tap
             pri("lookstart initialized")
+    pri("Lookstart not found")
+    mow.position = (centreX,centreY)
     with mouse.Listener(on_move=on_move,on_click=on_click,on_scroll=on_scroll) as listener:
         lis.append(listener)
         pri("appended")
@@ -78,29 +91,24 @@ def processClick(but):
     elif but==button_back:
         e(com.getTap("gun2"))
 
-px=0
-py=0
-dx=0
-dy=0
-threshold=120
-scale=0.5
-look_duration = 50
 
-def processMovement(x,y):
-    global px
-    global py
-    global dx
-    global dy
-    dx += x-px
-    dy += y-py
-    px=x
-    py=y
-    if abs(dx)>threshold or abs(dy)>threshold:
-        #now move that much
-        print("dx",dx,"dy",dy)
-        #e(com.customSwipe(look_start.x,look_start.y,look_start.x+dx,look_start.y+dy))
-        dx=0
-        dy=0
+#time based movement calculator
+
+def processMovement():
+    while keys.keepRunning:
+        if lockControl:    
+            #sleep
+            mow.position = (centreX,centreY)
+            time.sleep(mouseRefresh)
+            #pri("Slept")
+            #send a swipe
+            x,y = currLoc
+            dx = int((x - centreX)*scale)
+            dy = int((y - centreY)*scale)
+            #print('dx= ',dx,'dy= ',dy)
+            if abs(dx)>0 and abs(dy)>0:
+                e(com.customSwipe(look_start.x,look_start.y,look_start.x+dx,look_start.y-dy))
+    t3._stop()
 
 def pri(m):
     logging.debug(m)
@@ -108,6 +116,11 @@ def pri(m):
 def e(finalEvent):
     if len(net.clients)>0 and lockControl:
         net.commands.insert(0,finalEvent)
+    else:
+        print(finalEvent)
 
 t2 = threading.Thread(name="controlthread",target=init)
 t2.start()
+
+t3 = threading.Thread(name="mousethread",target=processMovement)
+t3.start()
