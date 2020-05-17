@@ -31,7 +31,7 @@ class DM:
         for l in rem:
             lines.remove(l)
         for line in lines:
-            print("Exploding "+line)
+            #print("Exploding "+line)
             contents = line.split(',')
             t = Swipe(contents[0],contents[1],contents[2], contents[3],contents[4])
             swipes.append(t)
