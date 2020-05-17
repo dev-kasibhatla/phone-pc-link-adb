@@ -2,9 +2,11 @@ import DataManager as D
 import json
 tapDelay = 25
 
+
 idCounter = 0
 EVENT_TAP=0
 EVENT_SWIPE=1
+EVENT_MOUSE=2
 
 def init():
     data = D.DM()
@@ -42,7 +44,8 @@ def getTap(action):
                 "x1":tap.x,
                 "x2":tap.x,
                 "y1":tap.y,
-                "y2":tap.y
+                "y2":tap.y,
+                "hold":False
             }
             idCounter+=1
             return json.dumps(jo)
@@ -70,11 +73,12 @@ def customSwipe(x1,y1,x2,y2):
     global idCounter
     jo = {
         "id": idCounter,
-        "type": EVENT_SWIPE,
+        "type": EVENT_MOUSE,
         "x1":x1,
         "x2":x2,
         "y1":y1,
-        "y2":y2
+        "y2":y2,
+        "hold":False
     }
     idCounter+=1
     return json.dumps(jo)
