@@ -22,7 +22,9 @@ button_front = "Button.button9"
 button_back = "Button.button8"
 
 mow = Controller()
-centreX = 1736
+#monitor: 522,375
+#laptop: 1736,375
+centreX = 522
 centreY = 375
 currLoc = (centreX,centreY)
 
