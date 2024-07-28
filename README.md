@@ -18,7 +18,7 @@ Play Android phone games using a computer’s keyboard and mouse.
 1. Clone the repository
     
     ```bash
-    git clone https://github.com/dev-kasibhatla/ADB-Mapped-Control
+    git clone https://github.com/dev-kasibhatla/phone-pc-link-adb
     ```
     
 2. Connect your phone and ensure ADB can detect it
